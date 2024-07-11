@@ -3,7 +3,7 @@
 
 // @todo: DOM узлы
 const placesList = document.querySelector('.places__list');
-console.log(placesList);
+
 // @todo: Функция создания карточки
 function createCard(element, deleteCard) {
   const cardElement = cardTemplate.querySelector('.card').cloneNode(true);
