@@ -1,9 +1,9 @@
-export { createCard, deleteCard, likeCard };
+export { createCard, deleteCard };
 
 const cardTemplate = document.querySelector("#card-template").content;
 
 // @todo: Функция создания карточки
-function createCard(element, deleteCard, openImage, likeCard) {
+function createCard(element, deleteCard, openImage) {
   const cardElement = cardTemplate.querySelector(".card").cloneNode(true);
   const cardDelete = cardElement.querySelector(".card__delete-button");
   const cardImage = cardElement.querySelector(".card__image");
@@ -31,10 +31,6 @@ function deleteCard(elem) {
 }
 
 //функция добавления сердечка
-function likeCard() {
-  document.addEventListener("click", function (evt) {
-    if (evt.target.classList.contains("card__like-button")) {
-      evt.target.classList.toggle("card__like-button_is-active");
-    }
-  });
+function likeCard(evt) {
+  evt.target.classList.toggle("card__like-button_is-active");
 }
