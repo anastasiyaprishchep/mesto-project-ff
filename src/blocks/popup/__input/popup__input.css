@@ -14,6 +14,31 @@
   margin-bottom: 0;
 }
 
+.popup__input_type_error {
+  border-bottom: 1px solid red;
+}
+
+.popup__input-error {
+  color: red;
+  display: none;
+  z-index: 1;
+  position: absolute;
+  font-size: 12px;
+  line-height: 15px;
+}
+
+.popup__input-error:last-of-type {
+  padding-top: 10px;
+}
+
+.popup__input-error_active {
+  display: block;
+}
+
+.popup__error_visible {
+
+}
+
 @media screen and (max-width: 568px) {
   .popup__title {
     font-size: 12px;

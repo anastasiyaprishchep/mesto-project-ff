@@ -101,3 +101,57 @@ function createNewCard(evt) {
 }
 
 formElementNewCard.addEventListener("submit", createNewCard);
+
+
+const form = document.querySelector('.popup__form');
+const formInput = form.querySelector('.popup__input');
+const formError = form.querySelector(`.${formInput.id}-error`)
+
+const showError = (formElement, inputElement, errorMessage) => {
+  const errorElement = formElement.querySelector(`.${inputElement.id}-error`)
+
+  inputElement.classList.add('popup__input_type_error');
+  errorElement.textContent = errorMessage
+  errorElement.classList.add('popup__input-error_active');
+};
+
+const hideError = (formElement, inputElement) => {
+  const errorElement = formElement.querySelector(`.${inputElement.id}-error`)
+  inputElement.classList.remove('popup__input_type_error');
+  errorElement.classList.remove('popup__input-error_active');
+  errorElement.textContent = '';
+};
+
+const isValid = (formElement, inputElement) => {
+  if (!inputElement.validity.valid) {
+    showError(formElement, inputElement, inputElement.validationMessage);
+  }
+  else {
+    hideError(formElement, inputElement);
+  }
+}
+
+const setEventListeners = (formElement) => {
+  const inputList = Array.from(formElement.querySelectorAll('.popup__input'));
+    
+  inputList.forEach((inputElement) => {
+    inputElement.addEventListener('input', () => {
+      isValid(formElement, inputElement)
+    });
+  });
+}; 
+
+setEventListeners(form)
+
+const enableValidation = () => {
+  const formList = Array.from(document.querySelectorAll('.popup__form'))
+  formList.forEach((formElement) => {
+    formElement.addEventListener('submit', function (e) {
+      e.preventDefault();
+    })
+      setEventListeners(formElement);
+  })
+}
+
+enableValidation()
+
