@@ -4,6 +4,9 @@ import "./pages/index.css";
 import { initialCards } from "./components/cards.js";
 import { createCard, deleteCard } from "./components/card.js";
 import { openPopup, closePopup } from "./components/modal.js";
+import { enableValidation, clearValidation } from "./components/validation.js";
+import { userInfo, getCards, getUserInfo } from "./components/api.js"
+import { Promise } from "core-js/shim";
 
 const popupTypeImage = document.querySelector(".popup_type_image");
 const popupImage = document.querySelector(".popup__image");
@@ -26,6 +29,18 @@ const jobInput = formElement.querySelector(".popup__input_type_description");
 const profileTitle = document.querySelector(".profile__title");
 const profileDescription = document.querySelector(".profile__description");
 const popups = document.querySelectorAll(".popup");
+
+const editForm = popupEdit.querySelector(".popup__form");
+const cardForm = popupNewCard.querySelector(".popup__form");
+
+const validationConfig = {
+  formSelector: ".popup__form",
+  inputSelector: ".popup__input",
+  submitButtonSelector: ".popup__button",
+  inactiveButtonClass: "popup__button_disabled",
+  inputErrorClass: "popup__input_type_error",
+  errorClass: "popup__error_visible",
+};
 
 //закрытие попапа при клике на крестик
 popups.forEach((popup) => {
@@ -63,6 +78,8 @@ editPopupButton.addEventListener("click", function () {
 
   nameInput.value = profileTitle.textContent;
   jobInput.value = profileDescription.textContent;
+
+  clearValidation(editForm, validationConfig);
 });
 
 popupAddButton.addEventListener("click", function () {
@@ -98,60 +115,20 @@ function createNewCard(evt) {
   evt.target.reset();
 
   closePopup(popupNewCard);
+  clearValidation(cardForm, validationConfig);
 }
 
 formElementNewCard.addEventListener("submit", createNewCard);
 
+// включаем валидацию
+enableValidation(validationConfig);
 
-const form = document.querySelector('.popup__form');
-const formInput = form.querySelector('.popup__input');
-const formError = form.querySelector(`.${formInput.id}-error`)
+// получаем данные пользователя
+getUserInfo().then((result) => {
+  console.log(result);
+});
 
-const showError = (formElement, inputElement, errorMessage) => {
-  const errorElement = formElement.querySelector(`.${inputElement.id}-error`)
-
-  inputElement.classList.add('popup__input_type_error');
-  errorElement.textContent = errorMessage
-  errorElement.classList.add('popup__input-error_active');
-};
-
-const hideError = (formElement, inputElement) => {
-  const errorElement = formElement.querySelector(`.${inputElement.id}-error`)
-  inputElement.classList.remove('popup__input_type_error');
-  errorElement.classList.remove('popup__input-error_active');
-  errorElement.textContent = '';
-};
-
-const isValid = (formElement, inputElement) => {
-  if (!inputElement.validity.valid) {
-    showError(formElement, inputElement, inputElement.validationMessage);
-  }
-  else {
-    hideError(formElement, inputElement);
-  }
-}
-
-const setEventListeners = (formElement) => {
-  const inputList = Array.from(formElement.querySelectorAll('.popup__input'));
-    
-  inputList.forEach((inputElement) => {
-    inputElement.addEventListener('input', () => {
-      isValid(formElement, inputElement)
-    });
-  });
-}; 
-
-setEventListeners(form)
-
-const enableValidation = () => {
-  const formList = Array.from(document.querySelectorAll('.popup__form'))
-  formList.forEach((formElement) => {
-    formElement.addEventListener('submit', function (e) {
-      e.preventDefault();
-    })
-      setEventListeners(formElement);
-  })
-}
-
-enableValidation()
-
+// получаем карточки
+getCards().then((result) => {
+  console.log(result);
+});
