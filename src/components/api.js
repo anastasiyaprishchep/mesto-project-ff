@@ -1,17 +1,18 @@
 const config = {
-  baseUrl: 'https://nomoreparties.co/v1/pwff-cohort-1',
+  baseUrl: "https://nomoreparties.co/v1/pwff-cohort-1",
   headers: {
-    authorization: '91449441-3560-49e4-b605-bed2a341315e',
-    'Content-Type': 'application/json',
+    authorization: "91449441-3560-49e4-b605-bed2a341315e",
+    "Content-Type": "application/json",
   },
 };
 
-const PATH = "https://nomoreparties.co/v1/pwff-cohort-1";
-const authorization = "91449441-3560-49e4-b605-bed2a341315e";
+//const PATH = "https://nomoreparties.co/v1/pwff-cohort-1";
+//const authorization = "91449441-3560-49e4-b605-bed2a341315e";
+
 function handleResponse(response) {
   if (response.ok) {
     return response.json();
-  } 
+  }
   throw new Error("Данные не получены");
 }
 
@@ -35,13 +36,12 @@ export const editProfile = (nameInput, aboutInput) => {
     body: JSON.stringify({
       name: `${nameInput}`,
       about: `${aboutInput}`,
-    })
-    })
-    .then(handleResponse)
+    }),
+  }).then(handleResponse);
 };
 
 export const addNewCard = (name, link) => {
- return fetch(`${config.baseUrl}/cards`, {
+  return fetch(`${config.baseUrl}/cards`, {
     method: "POST",
     headers: config.headers,
     body: JSON.stringify({
@@ -51,37 +51,33 @@ export const addNewCard = (name, link) => {
   }).then(handleResponse);
 };
 
-
 export const deleteCardApi = (cardId) => {
   return fetch(`${config.baseUrl}/cards/${cardId}`, {
-    method: 'DELETE',
+    method: "DELETE",
     headers: config.headers,
-  }).then(handleResponse)
-}
+  }).then(handleResponse);
+};
 
 export const cardLikeApi = (cardId) => {
   return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
-    method: 'PUT',
+    method: "PUT",
     headers: config.headers,
-  }).then(handleResponse)
-}
+  }).then(handleResponse);
+};
 
 export const deleteLikeApi = (cardId) => {
   return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
-    method: 'DELETE',
+    method: "DELETE",
     headers: config.headers,
-  }).then(handleResponse)
-}
+  }).then(handleResponse);
+};
 
 export const editAvatarApi = (avatar) => {
   return fetch(`${config.baseUrl}/users/me/avatar`, {
-    method: 'PATCH',
-    headers:  config.headers,
+    method: "PATCH",
+    headers: config.headers,
     body: JSON.stringify({
       avatar: avatar,
-    })
-  }).then(handleResponse)
-}
-
-
-
+    }),
+  }).then(handleResponse);
+};

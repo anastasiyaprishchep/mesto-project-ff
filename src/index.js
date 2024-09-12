@@ -5,7 +5,12 @@ import "./pages/index.css";
 import { createCard, deleteCard, likeCard } from "./components/card.js";
 import { openPopup, closePopup } from "./components/modal.js";
 import { enableValidation, clearValidation } from "./components/validation.js";
-import { getInitialCards, getUserInfo, editProfile, addNewCard } from "./components/api.js"
+import {
+  getInitialCards,
+  getUserInfo,
+  editProfile,
+  addNewCard,
+} from "./components/api.js";
 import { editAvatarApi } from "./components/api.js";
 
 const popupTypeImage = document.querySelector(".popup_type_image");
@@ -23,12 +28,13 @@ const nameInputNewCard = formElementNewCard.querySelector(
 const linkInputNewCard = formElementNewCard.querySelector(
   ".popup__input_type_url"
 );
-const saveNewCardButton = popupNewCard.querySelector(".popup__button")
-
+const saveNewCardButton = popupNewCard.querySelector(".popup__button");
 
 const formElementEdit = popupEdit.querySelector(".popup__form");
 const nameInputEdit = formElementEdit.querySelector(".popup__input_type_name");
-const jobInputEdit = formElementEdit.querySelector(".popup__input_type_description");
+const jobInputEdit = formElementEdit.querySelector(
+  ".popup__input_type_description"
+);
 const profileTitle = document.querySelector(".profile__title");
 const profileDescription = document.querySelector(".profile__description");
 const popups = document.querySelectorAll(".popup");
@@ -37,46 +43,46 @@ const saveEditButton = popupEdit.querySelector(".popup__button");
 const editIcon = document.querySelector(".edit-icon");
 const popupAvatar = document.querySelector(".popup_type_avatar");
 const popupAvatarForm = popupAvatar.querySelector(".popup__form");
-const saveAvatarButton = popupAvatar.querySelector(".popup__button")
-
+const saveAvatarButton = popupAvatar.querySelector(".popup__button");
 
 // функция загрузки кнопки
 
 function buttonSaveLoader(loader, button) {
-  if(loader) {
+  if (loader) {
     button.textContent = "Сохранение...";
-  }
-  else if (!loader) {
+  } else if (!loader) {
     button.textContent = "Сохранить";
   }
 }
 
 //открытие попапа аватара
 
-editIcon.addEventListener('click', function () {
+editIcon.addEventListener("click", function () {
   openPopup(popupAvatar);
-})
+});
 
-popupAvatarForm.addEventListener ('submit', () => {
-  const avatarLinkInput = document.querySelector(".popup__input_type_avatar_url");
-  
+popupAvatarForm.addEventListener("submit", () => {
+  const avatarLinkInput = document.querySelector(
+    ".popup__input_type_avatar_url"
+  );
+
   buttonSaveLoader(true, saveAvatarButton);
   editAvatarApi(avatarLinkInput.value)
-  .then((data) => {
-    const avatarImage = document.querySelector(".profile__image");
-    avatarImage.style.backgroundImage = `url(${data.avatar})`;
-    closePopup(popupAvatar);
-    popupAvatarForm.reset();
-  })
-  .catch((err) => {
-   console.log(err, 'ошибка при редактировании аватара')
-  })
-  .finally(() => {
-    buttonSaveLoader(false, saveAvatarButton);
-  })
-})
+    .then((data) => {
+      const avatarImage = document.querySelector(".profile__image");
+      avatarImage.style.backgroundImage = `url(${data.avatar})`;
+      closePopup(popupAvatar);
+      popupAvatarForm.reset();
+    })
+    .catch((err) => {
+      console.log(err, "ошибка при редактировании аватара");
+    })
+    .finally(() => {
+      buttonSaveLoader(false, saveAvatarButton);
+    });
+});
 
-let userId 
+let userId;
 
 const validationConfig = {
   formSelector: ".popup__form",
@@ -134,18 +140,18 @@ function handleProfileFormSubmit(evt) {
   buttonSaveLoader(true, saveEditButton);
 
   editProfile(nameInputEdit.value, jobInputEdit.value)
-  .then((data) => {
-    profileTitle.textContent = data.name;
-    profileDescription.textContent = data.about;
-    closePopup(popupEdit);
-    formElementEdit.reset()
-  }) 
-  .catch((err) => {
-    console.log(err, 'ошибка при редактировании профиля')
-  })
-  .finally(() => {
-    buttonSaveLoader(false, saveEditButton);
-  })
+    .then((data) => {
+      profileTitle.textContent = data.name;
+      profileDescription.textContent = data.about;
+      closePopup(popupEdit);
+      formElementEdit.reset();
+    })
+    .catch((err) => {
+      console.log(err, "ошибка при редактировании профиля");
+    })
+    .finally(() => {
+      buttonSaveLoader(false, saveEditButton);
+    });
 }
 
 formElementEdit.addEventListener("submit", handleProfileFormSubmit);
@@ -156,20 +162,20 @@ function createNewCard(evt) {
   evt.preventDefault();
 
   buttonSaveLoader(true, saveNewCardButton);
-  addNewCard(nameInputNewCard.value, linkInputNewCard.value) 
+  addNewCard(nameInputNewCard.value, linkInputNewCard.value)
     .then((data) => {
-      const newCard = createCard(data, deleteCard, openImage);
+      const newCard = createCard(data, deleteCard, openImage, likeCard, userId);
       placesList.prepend(newCard);
       closePopup(popupNewCard);
-      evt.target.reset();
+      formElementNewCard.reset();
     })
     .catch((err) => {
-      console.log(err, 'ошибка создания новой карточки')
+      console.log(err, "ошибка создания новой карточки");
     })
     .finally(() => {
       buttonSaveLoader(false, saveNewCardButton);
-    })
-  
+    });
+
   clearValidation(formElementNewCard, validationConfig);
 }
 
@@ -179,27 +185,20 @@ formElementNewCard.addEventListener("submit", createNewCard);
 enableValidation(validationConfig);
 
 function getUserinfoAndCards() {
-return Promise.all([
-  getInitialCards(),
-  getUserInfo()
-])
-.then(([cardsData, userData]) => {
-  userId = userData._id;
+  return Promise.all([getInitialCards(), getUserInfo()])
+    .then(([cardsData, userData]) => {
+      userId = userData._id;
 
-  cardsData.forEach(function (element) {
-    placesList.append(createCard(element, deleteCard, likeCard, openImage, userId));
-  });
-})
+      cardsData.forEach(function (element) {
+        placesList.append(
+          createCard(element, deleteCard, likeCard, openImage, userId)
+        );
+      });
+    })
 
-.catch((err)=> {
-  console.log('err', err);
-})
+    .catch((err) => {
+      console.log("err", err);
+    });
 }
 
-getUserinfoAndCards()
-
-
-
-
-
-  
+getUserinfoAndCards();
