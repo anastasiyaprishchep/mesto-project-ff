@@ -14,8 +14,6 @@ function createCard(element, deleteCard, likeCard, openImage, userId) {
   const cardLikeButton = cardElement.querySelector(".card__like-button");
   const likeCounter = cardElement.querySelector(".like-count");
   const cardId = element._id;
-  //const userId = element.owner._id;
-  //console.log(userId === element.owner._id)
 
   likeCounter.textContent = element.likes.length;
   cardImage.src = element.link;
