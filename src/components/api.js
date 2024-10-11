@@ -34,8 +34,8 @@ export const editProfile = (nameInput, aboutInput) => {
     method: "PATCH",
     headers: config.headers,
     body: JSON.stringify({
-      name: `${nameInput}`,
-      about: `${aboutInput}`,
+      name: nameInput,
+      about: aboutInput,
     }),
   }).then(handleResponse);
 };
@@ -45,8 +45,8 @@ export const addNewCard = (name, link) => {
     method: "POST",
     headers: config.headers,
     body: JSON.stringify({
-      name: `${name}`,
-      link: `${link}`,
+      name: name,
+      link: link,
     }),
   }).then(handleResponse);
 };

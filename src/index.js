@@ -37,6 +37,9 @@ const jobInputEdit = formElementEdit.querySelector(
 );
 const profileTitle = document.querySelector(".profile__title");
 const profileDescription = document.querySelector(".profile__description");
+const avatarImage = document.querySelector(".profile__image");
+
+
 const popups = document.querySelectorAll(".popup");
 const saveEditButton = popupEdit.querySelector(".popup__button");
 
@@ -48,11 +51,7 @@ const saveAvatarButton = popupAvatar.querySelector(".popup__button");
 // функция загрузки кнопки
 
 function buttonSaveLoader(loader, button) {
-  if (loader) {
-    button.textContent = "Сохранение...";
-  } else if (!loader) {
-    button.textContent = "Сохранить";
-  }
+  button.textContent = loader ? "Сохранение..." : "Сохранить";
 }
 
 //открытие попапа аватара
@@ -69,7 +68,6 @@ popupAvatarForm.addEventListener("submit", () => {
   buttonSaveLoader(true, saveAvatarButton);
   editAvatarApi(avatarLinkInput.value)
     .then((data) => {
-      const avatarImage = document.querySelector(".profile__image");
       avatarImage.style.backgroundImage = `url(${data.avatar})`;
       closePopup(popupAvatar);
       popupAvatarForm.reset();
@@ -188,6 +186,12 @@ function getUserinfoAndCards() {
   return Promise.all([getInitialCards(), getUserInfo()])
     .then(([cardsData, userData]) => {
       userId = userData._id;
+      profileTitle.textContent = userData.name;
+      profileDescription.textContent = userData.about;
+      avatarImage.setAttribute(
+        "style",
+        `background-image: url('${userData.avatar}')`
+      );
 
       cardsData.forEach(function (element) {
         placesList.append(

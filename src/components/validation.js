@@ -49,18 +49,25 @@ const hasInvalidInput = (inputList) => {
   });
 };
 
+const disableSubmitButton = (buttonElement, validationConfig) => {
+  buttonElement.disabled = true;
+  buttonElement.classList.add(validationConfig.inactiveButtonClass);
+};
+
+const enableSubmitButton = (buttonElement, validationConfig) => {
+  buttonElement.disabled = false;
+  buttonElement.classList.remove(validationConfig.inactiveButtonClass);
+};
+
 // показываем или скрываем кнопку
 const toggleButtonState = (inputList, buttonElement, validationConfig) => {
   if (hasInvalidInput(inputList)) {
-    buttonElement.disabled = true;
-    buttonElement.classList.add(validationConfig.inactiveButtonClass);
+    disableSubmitButton(buttonElement, validationConfig);
   } else {
-    buttonElement.disabled = false;
-    buttonElement.classList.remove(validationConfig.inactiveButtonClass);
+    enableSubmitButton(buttonElement, validationConfig);
   }
 };
 
-//
 const setEventListeners = (formElement, validationConfig) => {
   const inputList = Array.from(
     formElement.querySelectorAll(validationConfig.inputSelector)
